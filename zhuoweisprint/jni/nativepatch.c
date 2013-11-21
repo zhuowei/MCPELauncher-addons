@@ -7,6 +7,9 @@
 
 #define LOG_TAG "zhuoweisprint"
 
+#define UP_KEY 5
+#define DOWN_KEY 6
+
 typedef struct {
 	char randomCrap[155];
 	char keyData[8];
@@ -33,11 +36,11 @@ long zhuoweisprint_currentTimeMillis() {
 
 void zhuoweisprint_keydoubletapped(int key, TouchScreenInput* touchScreenInput) {
 	__android_log_print(ANDROID_LOG_INFO, LOG_TAG, "Key double tapped: %i \n", key);
-	if (key == 1) { //up
-		zhuoweisprint_sprinting = !zhuoweisprint_sprinting;
-	} else if (key == 2) { //down
+	if (key == UP_KEY) { //up
+		zhuoweisprint_sprinting = 1;
+	} else if (key == DOWN_KEY) { //down
 		if (zhuoweisprint_player == 0) return;
-		char* movementInput = *((char**) (((int) zhuoweisprint_player) + 3272));
+		char* movementInput = *((char**) (((int) zhuoweisprint_player) + 3288));
 		movementInput[14] = !movementInput[14];
 	}
 }
@@ -52,10 +55,14 @@ void zhuoweisprint_tickHook(TouchScreenInput* touchScreenInput, void* player) {
 				long lastToggleTime = zhuoweisprint_lastTapTimes[i];
 				long currentTime = zhuoweisprint_currentTimeMillis();
 				long difference = currentTime - lastToggleTime;
-				if (difference <= 50 * 7) {
+				if (difference <= 50 * 14) {
 					zhuoweisprint_keydoubletapped(i, touchScreenInput);
 				}
 				zhuoweisprint_lastTapTimes[i] = currentTime;
+			} else {
+				if (i == UP_KEY) {
+					zhuoweisprint_sprinting = 0;
+				}
 			}
 		}
 		zhuoweisprint_lastKeyData[i] = touchScreenInput->keyData[i];
@@ -64,7 +71,7 @@ void zhuoweisprint_tickHook(TouchScreenInput* touchScreenInput, void* player) {
 }
 
 float zhuoweisprint_getWalkingSpeedModifierHook(void* player) {
-	if (zhuoweisprint_sprinting) return 2.0f;
+	if (zhuoweisprint_sprinting) return 1.3f;
 	return 1.0f;
 }
 
@@ -73,7 +80,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	//this gets called after the library's happily loaded and the Dalvik VM is ready
 	__android_log_print(ANDROID_LOG_INFO, LOG_TAG, "starting\n");
 
-	void* inputTick = dlsym(RTLD_DEFAULT, "_ZN24TouchscreenInput_TestFps4tickEP6Player");
+	void* inputTick = dlsym(RTLD_DEFAULT, "_ZN16TouchscreenInput4tickEP6Player");
 	mcpelauncher_hook(inputTick, &zhuoweisprint_tickHook, &zhuoweisprint_TouchScreenInput_tick_real);
 
 	void* walkingSpeed = dlsym(RTLD_DEFAULT, "_ZN6Player23getWalkingSpeedModifierEv");
