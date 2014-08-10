@@ -11,7 +11,7 @@
 #define DOWN_KEY 6
 
 typedef struct {
-	char randomCrap[155];
+	char randomCrap[171];
 	char keyData[8];
 } TouchScreenInput;	
 
@@ -40,7 +40,7 @@ void zhuoweisprint_keydoubletapped(int key, TouchScreenInput* touchScreenInput) 
 		zhuoweisprint_sprinting = 1;
 	} else if (key == DOWN_KEY) { //down
 		if (zhuoweisprint_player == 0) return;
-		char* movementInput = *((char**) (((int) zhuoweisprint_player) + 3288));
+		char* movementInput = *((char**) (((int) zhuoweisprint_player) + 3416));
 		movementInput[14] = !movementInput[14];
 	}
 }
