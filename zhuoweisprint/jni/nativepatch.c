@@ -7,17 +7,19 @@
 
 #define LOG_TAG "zhuoweisprint"
 
-#define UP_KEY 5
-#define DOWN_KEY 6
+#define UP_KEY 0
+#define DOWN_KEY 1
+
+#define PLAYER_MOVEMENT_INPUT_OFFSET 3388
 
 typedef struct {
-	char randomCrap[171];
-	char keyData[8];
+	char randomCrap[72];
+	char keyData[108];
 } TouchScreenInput;	
 
 static int zhuoweisprint_sprinting = 0; //todo multiplayer
 
-static void* zhuoweisprint_player = (void*) 0;
+static void* zhuoweisprint_player = NULL;
 
 static long zhuoweisprint_lastTapTimes[8];
 
@@ -27,11 +29,11 @@ static void (*zhuoweisprint_TouchScreenInput_tick_real)(TouchScreenInput*, void*
 static void (*zhuoweisprint_TouchscreenInput_render_real)(TouchScreenInput*, float);
 static float (*zhuoweisprint_Player_getWalkingSpeedModifier_real)(void*);
 
-long zhuoweisprint_currentTimeMillis() {
+long long zhuoweisprint_currentTimeMillis() {
 	struct timeval tv;
 	gettimeofday(&tv, (struct timezone *) NULL);
 	long long when = tv.tv_sec * 1000LL + tv.tv_usec / 1000;
-	return (long) when;
+	return when;
 }
 
 void zhuoweisprint_keydoubletapped(int key, TouchScreenInput* touchScreenInput) {
@@ -40,7 +42,7 @@ void zhuoweisprint_keydoubletapped(int key, TouchScreenInput* touchScreenInput) 
 		zhuoweisprint_sprinting = 1;
 	} else if (key == DOWN_KEY) { //down
 		if (zhuoweisprint_player == 0) return;
-		char* movementInput = *((char**) (((int) zhuoweisprint_player) + 3416));
+		char* movementInput = *((char**) (((uintptr_t) zhuoweisprint_player) + PLAYER_MOVEMENT_INPUT_OFFSET));
 		movementInput[14] = !movementInput[14];
 	}
 }
@@ -49,9 +51,9 @@ void zhuoweisprint_tickHook(TouchScreenInput* touchScreenInput, void* player) {
 
 	zhuoweisprint_player = player;
 	for (int i = 0; i < 8; i++) {
-		if (zhuoweisprint_lastKeyData[i] != touchScreenInput->keyData[i]) {
+		if (zhuoweisprint_lastKeyData[i] != touchScreenInput->keyData[i + 100]) {
 			__android_log_print(ANDROID_LOG_INFO, LOG_TAG, "Key toggled: %i \n", i);
-			if (touchScreenInput->keyData[i]) {
+			if (touchScreenInput->keyData[i + 100]) {
 				long lastToggleTime = zhuoweisprint_lastTapTimes[i];
 				long currentTime = zhuoweisprint_currentTimeMillis();
 				long difference = currentTime - lastToggleTime;
@@ -65,7 +67,7 @@ void zhuoweisprint_tickHook(TouchScreenInput* touchScreenInput, void* player) {
 				}
 			}
 		}
-		zhuoweisprint_lastKeyData[i] = touchScreenInput->keyData[i];
+		zhuoweisprint_lastKeyData[i] = touchScreenInput->keyData[i + 100];
 	}
 	zhuoweisprint_TouchScreenInput_tick_real(touchScreenInput, player);
 }
