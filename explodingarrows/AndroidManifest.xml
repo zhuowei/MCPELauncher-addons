@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- BEGIN_INCLUDE(manifest) -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="net.zhuoweizhang.mcpelauncher.addon.arrows"
+        android:versionCode="1"
+        android:versionName="1.0">
+
+	<uses-permission android:name="net.zhuoweizhang.mcpelauncher.ADDON"/>
+    <!-- This is the platform API where NativeActivity was introduced. -->
+    <uses-sdk android:minSdkVersion="9" />
+
+    <!-- This .apk has no Java code itself, so set hasCode to false. -->
+    <application android:label="@string/app_name" android:hasCode="false">
+
+        <!-- activities are for the weak -->
+		<!-- metadata specifying the library name. must match Android.mk.-->
+		<meta-data android:name="net.zhuoweizhang.mcpelauncher.api.nativelibname"
+			android:value="zhuowei_arrows"/>
+    </application>
+
+</manifest> 
+<!-- END_INCLUDE(manifest) -->
