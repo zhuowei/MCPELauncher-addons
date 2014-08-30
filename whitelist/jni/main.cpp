@@ -161,12 +161,12 @@ static void (*ChatScreen_sendChatMessage_real)(ChatScreen*);
 static void ChatScreen_sendChatMessage_hook(ChatScreen* chatScreen) {
 	std::string* chatMessagePtr = (std::string*) ((uintptr_t) chatScreen + CHATSCREEN_TEXTBOX_TEXT_OFFSET);
 	std::string msg = *chatMessagePtr;
-	if (msg.length() < 1 || msg[0] != '/') {
+	if (msg.length() < 1 || msg[0] != '.') {
 		ChatScreen_sendChatMessage_real(chatScreen);
 		return;
 	}
 	std::vector<std::string> parts = split(msg, ' ');
-	if (parts[0] != "/whitelist") {
+	if (parts[0] != ".whitelist") {
 		ChatScreen_sendChatMessage_real(chatScreen);
 		return;
 	}
@@ -179,7 +179,7 @@ static void ChatScreen_sendChatMessage_hook(ChatScreen* chatScreen) {
 			showMessage(chatScreen->minecraft, std::string("Removed."));
 		}
 	} else {
-		showMessage(chatScreen->minecraft, std::string("Usage: /whitelist <add|remove> <ip>"));
+		showMessage(chatScreen->minecraft, std::string("Usage: .whitelist <add|remove> <ip>"));
 	}
 }
 
