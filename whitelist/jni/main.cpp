@@ -24,7 +24,6 @@
 
 #define CHATSCREEN_TEXTBOX_TEXT_OFFSET 132
 
-class LoginPacket;
 namespace RakNet {
 	class RakNetGUID {
 		private:
@@ -40,6 +39,24 @@ namespace RakNet {
 		public:
 			SystemAddress GetSystemAddressFromGuid(RakNetGUID) const;
 	};
+
+	class RakStringImpl {
+		public:
+			char filler[16];
+			char* text;
+	};
+
+	class RakString {
+		public:
+			RakStringImpl* impl;
+	};
+};
+
+class LoginPacket {
+	public:
+		void** vtable; //0
+		char filler1[8]; // 4
+		RakNet::RakString username; // 12
 };
 
 class RakNetInstance {
@@ -98,6 +115,7 @@ static void showMessage(Minecraft* minecraft, std::string const& message) {
 
 static std::unordered_set<std::string> whitelistSet;
 static std::vector<std::string> whitelistVector;
+static std::string lastIp("");
 
 static bool isAllowed(const char* ip) {
 	std::string ipStr(ip);
@@ -138,8 +156,13 @@ static void ServerSideNetworkHandler_handle_hook(ServerSideNetworkHandler* handl
 	bool allowed = isAllowed(addressStr);
 	std::string message(allowed? "Allowing ": "Blocking ");
 	message.append(addressStr);
+	message.append(" ");
+	message.append(packet->username.impl->text);
 	showMessage(handler->minecraft, message);
-	if (!allowed) return;
+	if (!allowed) {
+		lastIp = addressStr;
+		return;
+	}
 	ServerSideNetworkHandler_handle_real(handler, guid, packet);
 }
 
@@ -178,8 +201,11 @@ static void ChatScreen_sendChatMessage_hook(ChatScreen* chatScreen) {
 			removeFromWhitelist(parts[2]);
 			showMessage(chatScreen->minecraft, std::string("Removed."));
 		}
+	} else if (parts.size() == 2 && parts[1] == "yes") {
+		addToWhitelist(lastIp);
+		showMessage(chatScreen->minecraft, std::string("Added ") + lastIp);
 	} else {
-		showMessage(chatScreen->minecraft, std::string("Usage: .whitelist <add|remove> <ip>"));
+		showMessage(chatScreen->minecraft, std::string("Usage: .whitelist <add|remove> <ip> or .whitelist yes"));
 	}
 }
 
