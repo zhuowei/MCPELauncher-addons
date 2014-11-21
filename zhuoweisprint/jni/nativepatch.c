@@ -10,10 +10,10 @@
 #define UP_KEY 0
 #define DOWN_KEY 1
 
-#define PLAYER_MOVEMENT_INPUT_OFFSET 3388
+#define PLAYER_MOVEMENT_INPUT_OFFSET 3400
 
 typedef struct {
-	char randomCrap[72];
+	char randomCrap[140]; // from TouchscreenInput::releaseAllKeys; the first key released is 100
 	char keyData[108];
 } TouchScreenInput;	
 

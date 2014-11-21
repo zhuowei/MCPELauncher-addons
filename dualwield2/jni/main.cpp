@@ -1,10 +1,10 @@
 #include <jni.h>
-#include <GLES/gl.h>
+//#include <GLES/gl.h>
 #include "Substrate.h"
 #include "mcpe_structs.h"
 
-// from Minecraft::selectLevel
-#define MINECRAFT_LOCAL_PLAYER_OFFSET 3192
+// from MinecraftClient::selectLevel
+#define MINECRAFT_LOCAL_PLAYER_OFFSET 248
 // from Player::getCarriedItem
 #define PLAYER_INVENTORY_OFFSET 3212
 
@@ -22,9 +22,10 @@ static void ItemInHandRenderer_render_hook(ItemInHandRenderer* renderer, float p
 	// call the actual Minecraft method first to render the right hand
 	ItemInHandRenderer_render_real(renderer, partialTicks);
 	// store the current camera position
-	glPushMatrix();
+	MatrixStack::Ref matref = MatrixStack::World.push();
 	// move the camera 1 units to the left
-	glTranslatef(-1, 0, 0);
+	Vec3 oneleft {-1.0f, 0.0f, 0.0f};
+	matref.matrix->translate(oneleft);
 	uintptr_t playerPtr = *((uintptr_t*) ((uintptr_t) renderer->minecraft + MINECRAFT_LOCAL_PLAYER_OFFSET));
 	Inventory* inventory = *((Inventory**) (playerPtr + PLAYER_INVENTORY_OFFSET));
 	
@@ -40,7 +41,8 @@ static void ItemInHandRenderer_render_hook(ItemInHandRenderer* renderer, float p
 	renderer->currentItem.cloneSafe(&backup);
 
 	// restore 
-	glPopMatrix();
+	// MatrixStack::View.pop();
+	// the MatrixStack::Ref auto pops
 }
 
 // this lib is loaded from Java code, and the JVM will call our

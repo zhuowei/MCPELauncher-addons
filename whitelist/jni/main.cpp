@@ -20,9 +20,9 @@
 
 #define TAG "Whitelist"
 // found in LocalPlayer::displayClientMessage, also before the first call to Gui constructor
-#define MINECRAFT_GUI_OFFSET 416
-
-#define CHATSCREEN_TEXTBOX_TEXT_OFFSET 132
+#define MINECRAFT_GUI_OFFSET 252
+// found in ChatScreen::setTextboxText
+#define CHATSCREEN_TEXTBOX_TEXT_OFFSET 200
 
 namespace RakNet {
 	class RakNetGUID {
@@ -83,8 +83,8 @@ class Gui {
 
 class ChatScreen {
 	public:
-		char filler[20]; //0
-		Minecraft* minecraft; //20
+		char filler[76]; //0
+		Minecraft* minecraft; //76, from ChatScreen::sendMessage
 		void sendChatMessage();
 };
 
@@ -109,7 +109,7 @@ static std::vector<std::string> split(const std::string &s, char delim) {
 /* end */
 
 static void showMessage(Minecraft* minecraft, std::string const& message) {
-	Gui* mygui = (Gui*) (((uintptr_t) minecraft) + MINECRAFT_GUI_OFFSET);
+	Gui* mygui = *((Gui**) (((uintptr_t) minecraft) + MINECRAFT_GUI_OFFSET));
 	mygui->displayClientMessage(message);
 }
 
