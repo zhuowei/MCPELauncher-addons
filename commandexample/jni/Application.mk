@@ -5,5 +5,3 @@ APP_CFLAGS := -g -Wall -O2 -std=gnu99 # optimization level 2, use C99 (for decle
 APP_CPPFLAGS += -std=c++11
 
 APP_STL := gnustl_shared
-
-NDK_TOOLCHAIN_VERSION := 4.8
