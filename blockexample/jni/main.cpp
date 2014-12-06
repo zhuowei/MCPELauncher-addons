@@ -9,7 +9,8 @@ const int baconTileId = 200;
 
 class BaconTile : public Tile {
 public:
-	using Tile::Tile;
+	BaconTile(int id, std::string textureName, Material const* material): Tile(id, textureName, material) {
+	}
 	virtual int getColor(TileSource*, int, int, int); // 48
 };
 
