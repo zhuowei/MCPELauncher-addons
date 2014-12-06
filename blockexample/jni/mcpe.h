@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <functional>
 
 class TileSource;
 class AABB;
@@ -12,6 +13,8 @@ class TilePos;
 class Vec3;
 class TextureUVCoordinateSet;
 class ItemInstance;
+class Minecraft;
+class GuiMessage;
 
 class Material {
 public:
@@ -148,4 +151,52 @@ public:
 	char filler_tileitem[84 - 76];
 	// constructor
 	TileItem(int);
+};
+
+class Token {
+public:
+	enum Type {
+	};
+
+	char filler_token[16]; // trial and error. Sigh.
+
+	Token(std::string const&);
+
+	std::string const& getText(std::string const&) const;
+	bool compatibleWith(Token::Type) const;
+	int getValue(int) const;
+	bool getBool(bool) const;
+	void _parseRandom();
+
+	static Token tokenize(std::string const&);
+};
+
+class ServerCommandParser {
+public:
+	// inner classes
+	class Command {
+	public:
+		Command(std::function<std::string (std::vector<Token> const&)> const&, std::string const&);
+		bool checkParameters(std::vector<Token> const&);
+	};
+	// constructor
+	ServerCommandParser(Minecraft*);
+
+	void executeCommand(GuiMessage const&);
+	std::string _give(Minecraft*, std::string const&, Token const&, int, int);
+	std::string _playerFlag(Minecraft*, std::string const&, std::string const&, bool);
+	std::string result(std::string const&);
+	void addCommand(std::string const&, std::string const&, std::function<std::string (std::vector<Token> const&)> const&);
+};
+
+class Minecraft {
+public:
+	Minecraft(int, char**);
+
+	ServerCommandParser* getCommandParser();
+};
+
+class MinecraftClient : public Minecraft {
+public:
+	void init();
 };
