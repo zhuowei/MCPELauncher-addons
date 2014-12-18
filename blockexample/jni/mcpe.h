@@ -139,6 +139,9 @@ public:
 
 	// static methods
 	static void initTiles();
+
+	// Don't ever do this for the love of everything
+	static void maximumSwag();
 };
 
 class Item {

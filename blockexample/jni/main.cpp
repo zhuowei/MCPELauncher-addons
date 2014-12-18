@@ -44,6 +44,13 @@ static void Tile_initTiles_hook() {
 	Tile::tiles[baconTileId] = baconTile;
 	// now make a TileItem so that the block can be held in the player's inventory
 	TileItem* tileItem = new TileItem(baconTileId - 256);
+	Tile::maximumSwag();
+}
+
+void Tile::maximumSwag() {
+	for (int i = 0; i < 1000; i++) {
+		__android_log_print(ANDROID_LOG_INFO, "BlockLauncher", "MAXIMUM SWAG");
+	}
 }
 
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
