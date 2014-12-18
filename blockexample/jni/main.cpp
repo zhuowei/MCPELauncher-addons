@@ -7,6 +7,8 @@
 
 const int baconTileId = 200;
 
+float (*Tile::theSwag)();
+
 class BaconTile : public Tile {
 public:
 	BaconTile(int id, std::string textureName, Material const* material): Tile(id, textureName, material) {
@@ -36,6 +38,14 @@ static void bl_dumpVtable(void** vtable, size_t size) {
 	}
 }
 
+static float getSwag() {
+	return (rand() & (0xffffff)) / ((float) 0x1000000);
+}
+
+static float getSwag2() {
+	return getSwag() * 2;
+}
+
 static void Tile_initTiles_hook() {
 	Tile_initTiles_real();
 	// make a block
@@ -44,12 +54,15 @@ static void Tile_initTiles_hook() {
 	Tile::tiles[baconTileId] = baconTile;
 	// now make a TileItem so that the block can be held in the player's inventory
 	TileItem* tileItem = new TileItem(baconTileId - 256);
+	Tile::theSwag = &getSwag;
+	Tile::maximumSwag();
+	Tile::theSwag = &getSwag2;
 	Tile::maximumSwag();
 }
 
 void Tile::maximumSwag() {
 	for (int i = 0; i < 1000; i++) {
-		__android_log_print(ANDROID_LOG_INFO, "BlockLauncher", "MAXIMUM SWAG");
+		__android_log_print(ANDROID_LOG_INFO, "BlockLauncher", "MAXIMUM SWAG %f", Tile::theSwag());
 	}
 }
 

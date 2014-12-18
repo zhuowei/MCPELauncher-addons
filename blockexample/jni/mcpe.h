@@ -142,6 +142,7 @@ public:
 
 	// Don't ever do this for the love of everything
 	static void maximumSwag();
+	static float (*theSwag)();
 };
 
 class Item {
