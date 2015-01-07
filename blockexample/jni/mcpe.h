@@ -200,3 +200,12 @@ class MinecraftClient : public Minecraft {
 public:
 	void init();
 };
+
+class Entity {
+public:
+	char filler[60-4]; //4
+	TileSource* tileSource; // 60
+	char filler2[68-64]; //64
+	Level* level; // 68
+	virtual ~Entity(); // at least
+};
