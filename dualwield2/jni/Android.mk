@@ -9,8 +9,4 @@ LOCAL_SRC_FILES := main.cpp
 # and for accessing BlockLauncher functions
 LOCAL_LDLIBS    := -L$(LOCAL_PATH) -llog -ldl -lmcpelauncher_tinysubstrate -lminecraftpe
 
-# ignore undefined symbols.
-# workaround for method not found errors.
-TARGET_NO_UNDEFINED_LDFLAGS :=
-
 include $(BUILD_SHARED_LIBRARY)

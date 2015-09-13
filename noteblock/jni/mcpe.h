@@ -370,3 +370,31 @@ public:
 
 class Player : public Entity {
 };
+
+class TileEntity {
+public:
+	char filler[0x60];
+	TileEntity(TileEntityType, TilePos const&, std::string const&);
+	virtual ~TileEntity(); // 3
+	virtual void load(CompoundTag*); // 4
+	virtual void save(CompoundTag*); // 5
+	virtual void tick(TileSource*); // 6
+	virtual bool isFinished(); // 7
+	virtual CompoundTag* getUpdatePacket(); // 8
+	virtual void onUpdatePacket(CompoundTag*); // 9
+	virtual void setRemoved(); // 10
+	virtual void triggerEvent(int, int); // 11
+	virtual void clearCache(); // 12
+	virtual void onNeighborChanged(TileSource&, int, int, int); // 13
+	virtual void getShadowRadius(TileSource&) const; // 14
+
+	void setChanged();
+};
+
+class EntityTile: public Tile {
+public:
+	virtual ~EntityTile(); // 3
+	virtual void neighborChanged(TileSource*, int, int, int, int, int, int); // 27
+	virtual void triggerEvent(TileSource*, int, int, int, int, int); // 61
+	virtual TileEntity* newTileEntity(TilePos const&); // 74
+};

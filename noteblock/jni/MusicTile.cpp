@@ -75,7 +75,17 @@ void MusicTile::use(Player* player, int x, int y, int z)
 	}
 	else
 	{
-		player->tileSource->tileEvent(TilePos {x, y, z}, 0, wtf++);
+		player->tileSource->tileEvent(TilePos {x, y, z}, 0, (wtf = (wtf + 1) % 25));
+	}
+}
+
+void MusicTile::neighborChanged(TileSource* par1World, int x, int y, int z, int par5, int par6, int par7)
+{
+	bool var6 = nb_TileSource_isBlockIndirectlyGettingPowered(par1World, x, y, z);
+
+	if (var6)
+	{
+		player->tileSource->tileEvent(TilePos {x, y, z}, 0, (wtf = (wtf + 1) % 25));
 	}
 }
 

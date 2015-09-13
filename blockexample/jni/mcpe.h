@@ -15,6 +15,7 @@ class TextureUVCoordinateSet;
 class ItemInstance;
 class Minecraft;
 class GuiMessage;
+class TextureAtlas;
 
 class Material {
 public:
@@ -46,6 +47,16 @@ public:
 	static Material cactus;
 	static Material portal;
 	static Material bed;
+};
+
+class TextureUVCoordinateSet {
+public:
+	float bounds[6]; // 0
+	int idunno; // 24
+	void* textureFile; // 28
+	TextureUVCoordinateSet(TextureUVCoordinateSet const& other) {
+		*this = other;
+	}
 };
 
 class Tile {
@@ -134,6 +145,8 @@ public:
 	virtual void getSpawnResourcesAuxValue(int); // 72
 	virtual void init(); // 73
 
+	TextureUVCoordinateSet getTextureUVCoordinateSet(std::string const&, int);
+
 	// static fields
 	static Tile* tiles[256];
 
@@ -144,6 +157,7 @@ public:
 class Item {
 public:
 	char filler_item[76];
+	static Item* items[];
 };
 
 class TileItem : public Item {
@@ -194,12 +208,15 @@ public:
 	Minecraft(int, char**);
 
 	ServerCommandParser* getCommandParser();
+	static TextureAtlas* _terrainTextureAtlas;
 };
 
 class MinecraftClient : public Minecraft {
 public:
 	void init();
 };
+
+class Level;
 
 class Entity {
 public:
@@ -208,4 +225,15 @@ public:
 	char filler2[68-64]; //64
 	Level* level; // 68
 	virtual ~Entity(); // at least
+};
+
+class TextureAtlasTextureItem {
+public:
+	std::string const& getName() const;
+	int uvCount() const;
+};
+
+class TextureAtlas {
+public:
+	TextureAtlasTextureItem* getTextureItem(std::string const&) const;
 };

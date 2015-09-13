@@ -8,6 +8,7 @@ public:
 	MusicTile(int id, std::string textureName, Material const* material) : Tile(id, textureName, material) {
 	}
 	virtual void use(Player* player, int x, int y, int z);
+	virtual void neighborChanged(TileSource* par1World, int x, int y, int z, int par5, int par6, int par7);
 	void triggerEvent(TileSource* par1World, int x, int y, int z, int par5, int par6);
 
 	static android_media_SoundPool::SoundPool* musicTileSoundPool;

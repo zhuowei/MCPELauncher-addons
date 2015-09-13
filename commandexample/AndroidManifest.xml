@@ -14,6 +14,7 @@
     <!-- metadata specifying the library name. must match Android.mk.-->
     <meta-data android:name="net.zhuoweizhang.mcpelauncher.api.nativelibname"
         android:value="net.zhuoweizhang.mcpelauncher.addon.commandexample"/>
+    <meta-data android:name="net.zhuoweizhang.mcpelauncher.api.targetmcpeversion" android:value="0.12.1.b8"/>
     </application>
 
 </manifest> 

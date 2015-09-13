@@ -1,6 +1,7 @@
-#if 0
 #include "mcpe.h"
 #include "MusicTileEntity.h"
+
+#if 0
 
 /**
  * Writes a tile entity to NBT.
@@ -29,6 +30,8 @@ void MusicTileEntity::read(CompoundTag* par1NBTTagCompound)
 		this->note = 24;
 	}
 }
+
+#endif
 
 /**
  * change pitch by -> (currentPitch + 1) % 25
@@ -72,4 +75,3 @@ void MusicTileEntity::triggerNote(TileSource* par1World, int x, int y, int z)
 		par1World->tileEvent(TilePos {x, y, z}, instrument, this->note);
 	}
 }
-#endif

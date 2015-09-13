@@ -47,12 +47,15 @@ static void Tile_initTiles_hook() {
 	TileItem* musicItem = new TileItem(musicTileId - 256);
 }
 
+bool (*nb_TileSource_isBlockIndirectlyGettingPowered)(TileSource* par1World, int x, int y, int z);
+
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
+	/*
 	void** yepVtable = (void**) dlsym(RTLD_DEFAULT, "_ZTV10TileEntity");
 	bl_dumpVtable(yepVtable, 0x3c);
 	void** yepVtable2 = (void**) dlsym(RTLD_DEFAULT, "_ZTV10EntityTile");
 	bl_dumpVtable(yepVtable2, 0x12c);
-	/*void* todump = dlsym(RTLD_DEFAULT, "SA_burp");
+	void* todump = dlsym(RTLD_DEFAULT, "SA_burp");
 	hexdump((char*) todump, 0x20);
 	SoundDesc* desc = (SoundDesc*) todump;
 	Dl_info info;
