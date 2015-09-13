@@ -80,14 +80,15 @@ static void ItemInHandRenderer_render_hook(ItemInHandRenderer* renderer, float p
 }
 
 static void TouchTurnInteractControl_switchState_hook(TouchTurnInteractControl* self, TouchTurnInteractControl::State state) {
-	__android_log_print(ANDROID_LOG_INFO, "DualWield", "switch state %d %f %f", state, self->ptrX, self->ptrY);
+	int screenWidth = ((AppPlatform_android*) AppPlatform::_singleton)->getScreenWidth();
+	//__android_log_print(ANDROID_LOG_INFO, "DualWield", "switch state %d %f %f %d", state, self->ptrX, self->ptrY, screenWidth);
 	TouchTurnInteractControl_switchState_real(self, state);
 	if (!mcinstance) return;
 	bool isLeft;
 	switch (state) {
 		case TouchTurnInteractControl::BUILD:
 		case TouchTurnInteractControl::BREAK:
-			isLeft = self->ptrX < (1280 / 2);
+			isLeft = self->ptrX < (screenWidth / 2);
 			break;
 		default:
 			isLeft = false;

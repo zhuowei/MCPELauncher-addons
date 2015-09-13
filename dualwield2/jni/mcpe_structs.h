@@ -87,3 +87,13 @@ public:
 	float ptrY;
 	void switchState(State);
 };
+
+class AppPlatform {
+public:
+	static AppPlatform* _singleton;
+};
+
+class AppPlatform_android : public AppPlatform {
+public:
+	int getScreenWidth();
+};
