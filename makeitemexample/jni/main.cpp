@@ -23,13 +23,36 @@ public:
 	static Item* mItems[4096];
 };
 
+enum ArmorSlot {
+};
+
+class ArmorItem: public Item {
+public:
+	class ArmorMaterial;
+
+	int armorType; // 64
+	int damageReduceAmount; // 68
+	int renderIndex; // 72
+	ArmorMaterial* armorMaterial; // 76
+
+	ArmorItem(std::string const&, int, ArmorMaterial const&, int, ArmorSlot);
+};
+
+bool bl_setArmorTexture(int, std::string const&);
+// we don't need this one but if you do:
+// bool bl_setArmorTexture(int, mce::TexturePtr*);
+
 static void (*Item_initItems_real)();
 static void Item_initItems_hook() {
 	Item_initItems_real();
-	Item* orangePeel = new Item("orangePeel", 3777 - 0x100);
+	Item* orangePeel = new ArmorItem("orangePeel", 3777 - 0x100, *(static_cast<ArmorItem*>(Item::mItems[310])->armorMaterial),
+		42 /* special render type */, (ArmorSlot)0);
 	orangePeel->setIcon("apple", 0);
 	orangePeel->setCategory((CreativeItemCategory) 3 /* TOOL */);
 	Item::mItems[3777] = orangePeel;
+	if (!bl_setArmorTexture(3777, "mob/zombie.png")) {
+		// failed to set armor texture :( too lazy to print a message lol
+	}
 	// Supposed to do the below, but didn't work, so omitting it
 	//std::string lowercaseStr = "orangepeel";
 	//Item::mItemLookupMap[lowercaseStr] = std::make_pair(lowercaseStr, std::unique_ptr<Item>(orangePeel));
